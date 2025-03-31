@@ -1,12 +1,13 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { TouchableOpacity, Text } from 'react-native';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import 'react-native-reanimated';
+import Colors from '@/constants/Colors';
 
-import { useColorScheme } from '@/components/useColorScheme';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -23,7 +24,9 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    'UbuntuBold': require('../assets/fonts/ubuntu-bold.ttf'),
+    'UbuntuMedium': require('../assets/fonts/ubuntu-medium.ttf'),
+    UbuntuRegular: require('../assets/fonts/ubuntu-regular.ttf'),
     ...FontAwesome.font,
   });
 
@@ -46,14 +49,46 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+
+      <Stack.Screen 
+        name="(modals)/login" 
+        options={{ 
+          presentation: "modal",
+          headerRight: ()=>(
+            <TouchableOpacity onPress={ ()=> router.back() }>
+              <FontAwesome6 name="times-circle" size={24} color={Colors.grey} />
+            </TouchableOpacity>
+          )
+        }} 
+      />
+
+      <Stack.Screen 
+        name="(modals)/bookings" 
+        options={{ 
+          presentation: "modal",
+          headerRight: ()=>(
+            <TouchableOpacity onPress={ ()=> router.back() }>
+              <FontAwesome6 name="times-circle" size={24} color={Colors.grey} />
+            </TouchableOpacity>
+          )
+        }} 
+      />
+
+      <Stack.Screen 
+        name="listings/[id]" 
+        options={{ 
+          presentation: "transparentModal",
+          animation: "fade",
+          headerRight: ()=>(
+            <TouchableOpacity onPress={ ()=> router.back() }>
+              <FontAwesome6 name="times-circle" size={24} color={Colors.grey} />
+            </TouchableOpacity>
+          )
+        }} 
+      />
+    </Stack>
   );
 }
