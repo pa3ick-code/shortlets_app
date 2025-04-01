@@ -1,12 +1,14 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
-import { router, Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { TouchableOpacity, Text } from 'react-native';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import 'react-native-reanimated';
 import Colors from '@/constants/Colors';
+import { ClerkProvider, useAuth } from '@clerk/clerk-expo';
+import { tokenCache } from '@clerk/clerk-expo/token-cache'
 
 
 export {
@@ -45,10 +47,25 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return (
+    <ClerkProvider tokenCache={tokenCache}>
+      <RootLayoutNav />
+    </ClerkProvider>
+  );
 }
 
 function RootLayoutNav() {
+  const router = useRouter();
+  const { isLoaded, isSignedIn} = useAuth();
+
+  useEffect(() => {
+    console.log("Auth Loaded:", isLoaded);
+  console.log("User Signed In:", isSignedIn);
+    if(!isLoaded && !isSignedIn){
+      router.push('/(modals)/login')
+    }
+  }, [isLoaded])
+
   return (
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
