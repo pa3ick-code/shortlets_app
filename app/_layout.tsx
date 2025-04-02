@@ -3,12 +3,13 @@ import { useFonts } from 'expo-font';
 import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import { TouchableOpacity, Text, View } from 'react-native';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import 'react-native-reanimated';
 import Colors from '@/constants/Colors';
 import { ClerkProvider, useAuth } from '@clerk/clerk-expo';
 import { tokenCache } from '@clerk/clerk-expo/token-cache'
+import Toast from 'react-native-toast-message';
 
 
 export {
@@ -48,20 +49,21 @@ export default function RootLayout() {
   }
 
   return (
-    <ClerkProvider tokenCache={tokenCache}>
-      <RootLayoutNav />
-    </ClerkProvider>
+    <>
+      <ClerkProvider tokenCache={tokenCache}>
+        <RootLayoutNav />
+      </ClerkProvider>
+      <Toast />
+    </>
   );
 }
 
 function RootLayoutNav() {
   const router = useRouter();
-  const { isLoaded, isSignedIn} = useAuth();
+  const { isLoaded, isSignedIn } = useAuth();
 
   useEffect(() => {
-    console.log("Auth Loaded:", isLoaded);
-  console.log("User Signed In:", isSignedIn);
-    if(!isLoaded && !isSignedIn){
+    if(isLoaded && !isSignedIn){
       router.push('/(modals)/login')
     }
   }, [isLoaded])
