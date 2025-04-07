@@ -4,18 +4,17 @@ import { View, Text, StyleSheet } from "react-native";
 type toastConfigProps = {
     text1?: string,
     text2?: string,
-    type?: string,
 }
 
 export const toastConfig = {
   success: (message: toastConfigProps) => (
-    <View style={styles.wrapper}>
+    <View style={[styles.wrapper, { backgroundColor: Colors.success }]}>
       <Text style={styles.text1}>{message.text1}</Text>
       <Text style={styles.text2}>{message.text2}</Text>
     </View>
   ),
   error: (message: toastConfigProps) => (
-    <View style={styles.wrapper}>
+    <View style={[styles.wrapper, { backgroundColor: Colors.error }]}>
       <Text style={styles.text1}>{message.text1}</Text>
       <Text style={styles.text2}>{message.text2}</Text>
     </View>
@@ -24,9 +23,8 @@ export const toastConfig = {
 
 const styles = StyleSheet.create({
     wrapper: { 
-        backgroundColor: Colors.success, 
         padding: 15, 
-        borderRadius: 10,
+        borderRadius: 7,
     },
     text1: { 
         color: 'white', 

@@ -1,6 +1,6 @@
 export default {
   primary: '#0043AF',
-  grey: '#5E5D5E',
+  grey: '#626262FF',
   dark: '#1A1A1A',
 
   error: '#eb3434',

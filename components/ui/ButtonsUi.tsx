@@ -58,8 +58,10 @@ const styles = StyleSheet.create({
     },
 
     title: {
+        fontFamily: 'UbuntuBold',
         fontWeight: 500,
-        fontSize: 16
+        fontSize: 16,
+        paddingHorizontal: 20
     },
 
     icon: {

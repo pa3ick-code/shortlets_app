@@ -3,12 +3,20 @@ import ButtonsUi from '@/components/ui/ButtonsUi'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useCallback, useState } from 'react';
 import { useForm, Controller } from "react-hook-form"
-import { passwordValidation } from '@/utils/validations';
+import { emailValidation, passwordValidation } from '@/utils/validations';
 import { useAuth, useSignIn, useSignUp, useSSO } from '@clerk/clerk-expo';
 import { useWarmUpBrowser } from '@/hooks/useWarmUpBrouser';
 import { useRouter } from 'expo-router';
 import { Fonts, Colors } from '@/constants';
 import Toast from 'react-native-toast-message';
+import { showToast } from '@/utils/toast';
+
+enum strategy {
+  APPLE='oauth_apple',
+  GITHUB='oauth_github',
+  FACEBOOK='oauth_facebook',
+}
+
 
 const login = () => {
   useWarmUpBrowser()
@@ -21,6 +29,7 @@ const login = () => {
   const { isLoaded: signUpLoaded, signUp, setActive: signUpActive } = useSignUp();
   const { isLoaded: signInLoaded, signIn, setActive: signInActive} = useSignIn();
 
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [ signInForm, setSignInForm] = useState(true);
   const [loading, setLoading] = useState(false);
 
@@ -34,14 +43,6 @@ const login = () => {
       console.log(error);
     }
   }, [startSSOFlow]);
-
-  const showToast = useCallback((type: string, message: string) => {
-    Toast.show({
-      type,
-      text1: message,
-      visibilityTime: 3000,
-    });
-  }, [Toast]);
 
   const { control, handleSubmit, reset, formState: {errors} } = useForm({
     defaultValues: {
@@ -59,11 +60,11 @@ const login = () => {
       return;
     }
     if(!data.email || !data.password){
-      showToast('error', 'Please fill all fields');
+      showToast('error', 'Validation error', 'Please fill all fields');
       return;
     }
     if(!signInForm && !data.username){
-      showToast('error', 'Please fill all fields');
+      showToast('error', 'Validation error', 'username field is required');
       return;
     }
 
@@ -79,7 +80,7 @@ const login = () => {
         if(status !== 'complete') throw new Error(status!)
 
         await signUpActive({ session: result.createdSessionId });
-        showToast('success', 'Account created successfully 🎉');
+        showToast('success', 'Success', 'Account created successfully 🎉');
         reset();
         router.back();
         
@@ -92,12 +93,15 @@ const login = () => {
         const status = result.status
         if(status !== 'complete') throw new Error(status!)
         await signInActive({ session: result.createdSessionId });
-        showToast('success', 'Logged in successfully 🎉');
+        showToast('success', 'Success',  'Logged in successfully 🎉');
         reset();
         router.back();
       }
     }catch(err){
-      console.log(err)
+      console.log(err);
+      if(err instanceof Error){
+        showToast('error', 'Error', err.message);
+      }
     } finally {
         setLoading(false); 
     }
@@ -114,7 +118,7 @@ const login = () => {
       <View>
         {
           !signInForm && (
-            <View>
+            <View style={ styles.inputWrapper } >
               <Controller
                 control={control}
                 rules={{ required: !signInForm ? true : false }}
@@ -138,10 +142,10 @@ const login = () => {
           )
         }
 
-        <View>
+        <View style={ styles.inputWrapper } >
           <Controller 
             control={control}
-            rules={{ required: true }}
+            rules={ emailValidation}
             name='email'
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
@@ -160,10 +164,10 @@ const login = () => {
           )}
         </View>
 
-        <View>
+        <View style={ styles.inputWrapper } >
           <Controller 
             control={control}
-            rules={ passwordValidation }
+            rules={ !signInForm ? passwordValidation : { required: 'Password is required' } }
             name='password'
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
@@ -240,7 +244,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ffffff",
     padding: 16,
-    position: 'relative'
+    position: 'relative',
+    paddingTop: 50,
   },
 
   input: {
@@ -249,7 +254,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: Colors.grey,
     paddingLeft: 7,
-    marginBottom: 20
+  },
+
+  inputWrapper: {
+    marginBottom: 20,
   },
 
   separator: {
@@ -279,14 +287,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 20,
-    position: 'absolute',
-    bottom: 40,
-    width: '100%'
   },
 
   formTrigger: {
     textAlign:'center',
     fontWeight: 500,
+    fontFamily: Fonts.ubuntuBold,
     marginLeft: 5
   },
 

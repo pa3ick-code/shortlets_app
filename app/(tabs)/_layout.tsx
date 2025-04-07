@@ -12,7 +12,7 @@ const _layout = () => {
     <Tabs screenOptions={{
         tabBarActiveTintColor: Colors.primary,
         tabBarLabelStyle: {
-            fontFamily: "UbuntuMedium",
+            fontFamily: "UbuntuRegular",
         }
     }}>
 

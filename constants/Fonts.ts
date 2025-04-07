@@ -1,5 +1,5 @@
 export default {
-    // weights
+    // family
     ubuntuBold: 'UbuntuBold',
     ubuntuMedium: 'UbuntuMedium',
     ubuntuRegular: 'UbuntuRegular',
@@ -7,9 +7,9 @@ export default {
     // fontsize
     small: 12,
     medium: 14,
-    large: 16,
-    xlarge: 18,
-    xxlarge: 20,
-    xxxlarge: 22,
+    large: 17,
+    xlarge: 25,
+    xxlarge: 30,
+    xxxlarge: 30,
 
 }

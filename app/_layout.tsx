@@ -49,12 +49,10 @@ export default function RootLayout() {
   }
 
   return (
-    <>
-      <ClerkProvider tokenCache={tokenCache}>
-        <RootLayoutNav />
-      </ClerkProvider>
+    <ClerkProvider tokenCache={tokenCache}>
+      <RootLayoutNav />
       <Toast />
-    </>
+    </ClerkProvider>
   );
 }
 
@@ -97,15 +95,17 @@ function RootLayoutNav() {
       />
 
       <Stack.Screen 
-        name="listings/[id]" 
+        name="listing/[id]" 
         options={{ 
-          presentation: "transparentModal",
+          headerTitle: '',
+          headerTransparent: true,
           animation: "fade",
-          headerRight: ()=>(
-            <TouchableOpacity onPress={ ()=> router.back() }>
-              <FontAwesome6 name="times-circle" size={24} color={Colors.grey} />
-            </TouchableOpacity>
-          )
+          headerBackTitle: 'back',
+          // headerRight: ()=>(
+          //   <TouchableOpacity onPress={ ()=> router.back() }>
+          //     <FontAwesome6 name="times-circle" size={24} color={Colors.grey} />
+          //   </TouchableOpacity>
+          // )
         }} 
       />
     </Stack>
