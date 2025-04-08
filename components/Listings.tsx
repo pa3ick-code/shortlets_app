@@ -15,7 +15,7 @@ const Listings = () => {
 
   const RenderItems: ListRenderItem<ListingObject> = ({ item }) => (
     <Link href={`/listing/${item.id}`} asChild> 
-      <TouchableOpacity>
+      <TouchableOpacity style={{ marginBottom: 30 }} activeOpacity={0.8}>
         <Animated.View entering={FadeInRight} exiting={FadeInLeft}>
           <Image 
             source={{ uri: item.xl_picture_url! }} 

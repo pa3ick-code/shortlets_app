@@ -6,6 +6,7 @@ import Colors from '@/constants/Colors'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import ExploreHeader from '@/components/ExploreHeader';
 
 const _layout = () => {
   return (
@@ -20,7 +21,8 @@ const _layout = () => {
             name='index'
             options={{
                 tabBarLabel: "Explore",
-                tabBarIcon: ({ color, size }) => ( <AntDesign name='search1' color={color} size={size}/>)
+                tabBarIcon: ({ color, size }) => ( <AntDesign name='search1' color={color} size={size}/>),
+                header: () => <ExploreHeader  />,
             }}
         />
         <Tabs.Screen 
